@@ -13,9 +13,9 @@ def fft_convolve2d(x,y):
 
 class Conway:
     def __init__(self, width, height):
-        self.board = np.random.random(width*height).reshape((width, height)).round()
-        self.kernal = np.zeros((width, height))
-        self.kernal[width/2-1 : width/2+2, height/2-1 : height/2+2] = np.array([[1,1,1],[1,0,1],[1,1,1]])
+        self.board = np.random.random(width*height).reshape((height, width)).round()
+        self.kernal = np.zeros((height, width))
+        self.kernal[height/2-1 : height/2+2, width/2-1 : width/2+2] = np.array([[1,1,1],[1,0,1],[1,1,1]])
 
     def update(self):
         convolution = fft_convolve2d(self.board, self.kernal).round()
