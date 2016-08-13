@@ -1,4 +1,4 @@
-from numpy.fft import fft2, ifft2, fftshift
+from numpy.fft import fft2, ifft2
 from matplotlib import pyplot, animation
 import numpy as np
 
@@ -15,7 +15,7 @@ class Conway:
     def __init__(self, width, height):
         self.board = np.random.random(width*height).reshape((height, width)).round()
         self.kernal = np.zeros((height, width))
-        self.kernal[height/2-1 : height/2+2, width/2-1 : width/2+2] = np.array([[1,1,1],[1,0,1],[1,1,1]])
+        self.kernal[height//2-1 : height//2+2, width//2-1 : width//2+2] = np.array([[1,1,1],[1,0,1],[1,1,1]])
 
     def update(self):
         convolution = fft_convolve2d(self.board, self.kernal).round()
@@ -31,7 +31,7 @@ class Animation:
         self.ca = ca
         fig = pyplot.figure()
         self.image = pyplot.imshow(self.ca.board, interpolation="nearest", cmap=pyplot.cm.gray)
-        ani = animation.FuncAnimation(fig, self.animate, interval=1)
+        ani = animation.FuncAnimation(fig, self.animate)
         pyplot.show()
 
     def animate(self, *args):
