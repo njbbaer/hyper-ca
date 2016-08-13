@@ -1,9 +1,6 @@
 from numpy.fft import fft2, ifft2, fftshift
-from matplotlib import pyplot
+from matplotlib import pyplot, animation
 import numpy as np
-import time
-
-pyplot.ion()
 
 def fft_convolve2d(x,y):
     fr = fft2(x)
@@ -29,11 +26,19 @@ class Conway:
         new_board[np.where((convolution == 3) & (self.board == 0))] = 1
         self.board = new_board
 
-if __name__ == "__main__":
-    conway = Conway(1024, 1024)
-    pyplot.figure()
-    img_plot = pyplot.imshow(conway.board, interpolation="nearest", cmap = pyplot.cm.gray)
-    while True:
-        conway.update()
-        img_plot.set_data(conway.board)
-        pyplot.pause(0.0001)
+class Animation:
+    def __init__(self, ca):
+        self.ca = ca
+        fig = pyplot.figure()
+        self.image = pyplot.imshow(self.ca.board, interpolation="nearest", cmap=pyplot.cm.gray)
+        ani = animation.FuncAnimation(fig, self.animate, interval=1)
+        pyplot.show()
+
+    def animate(self, *args):
+        self.ca.update()
+        self.image.set_array(self.ca.board)
+        return self.image,
+
+if __name__ == '__main__':
+    ca = Conway(512, 512)
+    Animation(ca)
