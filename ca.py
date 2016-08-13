@@ -4,7 +4,7 @@ import numpy as np
 
 def fft_convolve2d(board, kernal):
     fr = fft2(board)
-    fr2 = fft2(np.flipud(np.fliplr(kernal)))
+    fr2 = fft2(kernal)
     m,n = fr.shape
     cc = np.real(ifft2(fr*fr2))
     cc = np.roll(cc, - int(m / 2) + 1, axis=0)
@@ -15,7 +15,7 @@ class Conway:
     def __init__(self, height, width):
         self.board = np.random.random(width*height).reshape((height, width)).round()
         self.kernal = np.zeros((height, width))
-        self.kernal[height//2-1 : height//2+2, width//2-1 : width//2+2] = np.array([[1,1,1],[1,0,1],[1,1,1]])
+        self.kernal[height//2-2 : height//2+1, width//2-2 : width//2+1] = np.array([[1,1,1],[1,0,1],[1,1,1]])
 
     def update(self):
         convolution = fft_convolve2d(self.board, self.kernal)
@@ -30,7 +30,7 @@ class Bugs:
     def __init__(self, height, width):
         self.board = np.random.random(width*height).reshape((height, width)).round()
         self.kernal = np.zeros((height, width))
-        self.kernal[height//2-5 : height//2+6, width//2-5 : width//2+6] = np.ones((11, 11))
+        self.kernal[height//2-6 : height//2+5, width//2-6 : width//2+5] = np.ones((11, 11))
 
     def update(self):
         convolution = fft_convolve2d(self.board, self.kernal)
