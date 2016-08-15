@@ -13,9 +13,24 @@ def fft_convolve2d(board, kernal):
     return cc.round()
 
 class Automata:
-    def __init__(self, height, width):
+    def __init__(self, height, width, neighborhood, rule):
         self.board = np.random.random(width*height).reshape((height, width)).round()
+
+        k_height, k_width = neighborhood.shape
         self.kernal = np.zeros((height, width))
+        self.kernal[(height - k_height - 1) // 2 : (height + k_height) // 2, 
+                (width - k_width - 1) // 2 : (width + k_width) // 2] = neighborhood
+
+        self.rule = rule
+
+    def update(self, iterations=1):
+        for i in range(iterations):
+            convolution = fft_convolve2d(self.board, self.kernal)
+            shape = convolution.shape
+            new_board = np.zeros(shape)
+            new_board[np.where(np.in1d(convolution, self.rule[0]).reshape(shape) & (self.board == 0))] = 1
+            new_board[np.where(np.in1d(convolution, self.rule[1]).reshape(shape) & (self.board == 1))] = 1
+            self.board = new_board
 
     def benchmark(self, iterations):
         start = time.process_time()
@@ -24,29 +39,15 @@ class Automata:
 
 class Conway(Automata):
     def __init__(self, height, width):
-        Automata.__init__(self, height, width)
-        self.kernal[height//2-2 : height//2+1, width//2-2 : width//2+1] = np.array([[1,1,1],[1,0,1],[1,1,1]])
-
-    def update(self, iterations=1):
-        for i in range(iterations):
-            convolution = fft_convolve2d(self.board, self.kernal)
-            new_board = np.zeros(convolution.shape)
-            new_board[np.where((convolution == 2) & (self.board == 1))] = 1
-            new_board[np.where(convolution == 3)] = 1
-            self.board = new_board
+        neighborhood = np.array([[1,1,1],[1,0,1],[1,1,1]])
+        rule = [[3], [2, 3]]
+        Automata.__init__(self, height, width, neighborhood, rule)
 
 class Bugs(Automata):
     def __init__(self, height, width):
-        Automata.__init__(self, height, width)
-        self.kernal[height//2-6 : height//2+5, width//2-6 : width//2+5] = np.ones((11, 11))
-
-    def update(self, iterations=1):
-        for i in range(iterations):
-            convolution = fft_convolve2d(self.board, self.kernal)
-            new_board = np.zeros(convolution.shape)
-            new_board[np.where((convolution >= 34) & (convolution <= 58) & (self.board == 1))] = 1
-            new_board[np.where((convolution >= 34) & (convolution <= 45))] = 1
-            self.board = new_board
+        neighborhood = np.ones((11, 11))
+        rule = [np.arange(34, 46), np.arange(34, 59)]
+        Automata.__init__(self, height, width, neighborhood, rule)
 
 class Animation:
     def __init__(self, ca, interval=100):
@@ -63,8 +64,8 @@ class Animation:
 
 if __name__ == "__main__":
     # Create automata
-    # ca = Conway(512, 512)
     ca = Bugs(512, 512)
+    # ca = Conway(512, 512)
 
     # Benchmark automata
     # ca.benchmark(100)
