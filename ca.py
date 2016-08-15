@@ -1,6 +1,7 @@
 from matplotlib import pyplot, animation
 from numpy.fft import fft2, ifft2
 import numpy as np
+import time
 
 def fft_convolve2d(board, kernal):
     fr = fft2(board)
@@ -11,35 +12,41 @@ def fft_convolve2d(board, kernal):
     cc = np.roll(cc, - int(n / 2) + 1, axis=1)
     return cc.round()
 
-class Conway:
+class Automata:
     def __init__(self, height, width):
         self.board = np.random.random(width*height).reshape((height, width)).round()
         self.kernal = np.zeros((height, width))
+
+    def benchmark(self, iterations):
+        start = time.process_time()
+        self.update(iterations)
+        print(iterations, "iterations of", ca.board.shape, "took", time.process_time()-start, "seconds")
+
+class Conway(Automata):
+    def __init__(self, height, width):
+        Automata.__init__(self, height, width)
         self.kernal[height//2-2 : height//2+1, width//2-2 : width//2+1] = np.array([[1,1,1],[1,0,1],[1,1,1]])
 
-    def update(self):
-        convolution = fft_convolve2d(self.board, self.kernal)
+    def update(self, iterations=1):
+        for i in range(iterations):
+            convolution = fft_convolve2d(self.board, self.kernal)
+            new_board = np.zeros(convolution.shape)
+            new_board[np.where((convolution == 2) & (self.board == 1))] = 1
+            new_board[np.where(convolution == 3)] = 1
+            self.board = new_board
 
-        new_board = np.zeros(convolution.shape)
-
-        new_board[np.where((convolution == 2) & (self.board == 1))] = 1
-        new_board[np.where(convolution == 3)] = 1
-        self.board = new_board
-
-class Bugs:
+class Bugs(Automata):
     def __init__(self, height, width):
-        self.board = np.random.random(width*height).reshape((height, width)).round()
-        self.kernal = np.zeros((height, width))
+        Automata.__init__(self, height, width)
         self.kernal[height//2-6 : height//2+5, width//2-6 : width//2+5] = np.ones((11, 11))
 
-    def update(self):
-        convolution = fft_convolve2d(self.board, self.kernal)
-
-        new_board = np.zeros(convolution.shape)
-
-        new_board[np.where((convolution >= 34) & (convolution <= 58) & (self.board == 1))] = 1
-        new_board[np.where((convolution >= 34) & (convolution <= 45))] = 1
-        self.board = new_board
+    def update(self, iterations=1):
+        for i in range(iterations):
+            convolution = fft_convolve2d(self.board, self.kernal)
+            new_board = np.zeros(convolution.shape)
+            new_board[np.where((convolution >= 34) & (convolution <= 58) & (self.board == 1))] = 1
+            new_board[np.where((convolution >= 34) & (convolution <= 45))] = 1
+            self.board = new_board
 
 class Animation:
     def __init__(self, ca):
@@ -55,6 +62,12 @@ class Animation:
         return self.image,
 
 if __name__ == "__main__":
-	#ca = Conway(256, 256)
-    ca = Bugs(256, 256)
+    # Create automata
+    # ca = Conway(512, 512)
+    ca = Bugs(512, 512)
+
+    # Benchmark automata
+    # ca.benchmark(100)
+
+    # Animate automata
     Animation(ca)
