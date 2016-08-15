@@ -49,11 +49,11 @@ class Bugs(Automata):
             self.board = new_board
 
 class Animation:
-    def __init__(self, ca):
+    def __init__(self, ca, interval=100):
         self.ca = ca
         fig = pyplot.figure()
         self.image = pyplot.imshow(self.ca.board, interpolation="nearest", cmap=pyplot.cm.gray)
-        ani = animation.FuncAnimation(fig, self.animate)
+        ani = animation.FuncAnimation(fig, self.animate, interval=interval)
         pyplot.show()
 
     def animate(self, *args):
