@@ -15,8 +15,9 @@ def fft_convolve2d(board, kernal):
 
 
 class Automata:
-    def __init__(self, height, width, neighborhood, rule):
-        self.board = np.random.random(width*height).reshape((height, width)).round()
+    def __init__(self, height, width, density, neighborhood, rule):
+        self.board = np.random.uniform(0, 1, (width, height))
+        self.board = self.board < density
 
         k_height, k_width = neighborhood.shape
         self.kernal = np.zeros((height, width))
@@ -46,31 +47,31 @@ class Automata:
 
 
 class Conway(Automata):
-    def __init__(self, height, width):
+    def __init__(self, height, width, density):
         neighborhood = np.array([[1, 1, 1], [1, 0, 1], [1, 1, 1]])
         rule = [[2, 3], [3]]
-        Automata.__init__(self, height, width, neighborhood, rule)
+        Automata.__init__(self, height, width, density, neighborhood, rule)
 
 
 class Life34(Automata):
-    def __init__(self, height, width):
+    def __init__(self, height, width, density):
         neighborhood = np.array([[1, 1, 1], [1, 0, 1], [1, 1, 1]])
         rule = [[3, 4], [3, 4]]
-        Automata.__init__(self, height, width, neighborhood, rule)
+        Automata.__init__(self, height, width, density, neighborhood, rule)
 
 
 class Amoeba(Automata):
-    def __init__(self, height, width):
+    def __init__(self, height, width, density):
         neighborhood = np.array([[1, 1, 1], [1, 0, 1], [1, 1, 1]])
         rule = [[1, 3, 5, 8], [3, 5, 7]]
-        Automata.__init__(self, height, width, neighborhood, rule)
+        Automata.__init__(self, height, width, density, neighborhood, rule)
 
 
 class Bugs(Automata):
-    def __init__(self, height, width):
+    def __init__(self, height, width, density):
         neighborhood = np.ones((11, 11))
         rule = [np.arange(34, 59), np.arange(34, 46)]
-        Automata.__init__(self, height, width, neighborhood, rule)
+        Automata.__init__(self, height, width, density, neighborhood, rule)
 
 
 class Animation:
@@ -91,14 +92,14 @@ class Animation:
 
 def main():
     # Create automata
-    automata = Bugs(512, 512)
-    # automata = Conway(512, 512)
+    automata = Bugs(512, 512, density=0.5)
+    # automata = Conway(512, 512, density=0.5)
 
     # Benchmark automata
     # ca.benchmark(100)
 
     # Animate automata
-    Animation(automata)
+    Animation(automata, 1)
 
 
 if __name__ == "__main__":
