@@ -27,7 +27,7 @@ class Automata:
         self.rule = rule
 
 
-    def update_board(self, intervals=1):
+    def update(self, intervals=1):
         for i in range(intervals):
             convolution = fft_convolve2d(self.board, self.kernal)
             shape = convolution.shape
@@ -41,22 +41,22 @@ class Automata:
 
     def benchmark(self, interations):
         start = time.process_time()
-        self.update_board(interations)
+        self.update(interations)
         print("Performed", interations, "iterations of", self.board.shape, "cells in",
               time.process_time() - start, "seconds")
 
 
     def animate(self, interval=100):
         
-        def update_animation(*args):
-            self.update_board()
-            self.image.set_array(self.board)
-            return self.image,
+        def refresh(*args):
+            self.update()
+            image.set_array(self.board)
+            return image,
 
-        fig = pyplot.figure()
-        self.image = pyplot.imshow(self.board, interpolation="nearest",
-                                   cmap=pyplot.cm.gray)
-        ani = animation.FuncAnimation(fig, update_animation, interval=interval)
+        figure = pyplot.figure()
+        image = pyplot.imshow(self.board, interpolation="nearest",
+                              cmap=pyplot.cm.gray)
+        ani = animation.FuncAnimation(figure, refresh, interval=interval)
         pyplot.show()
 
 
@@ -95,6 +95,14 @@ class Bugs(Automata):
         Automata.__init__(self, shape, density, neighborhood, rule)
 
 
+class Globe(Automata):
+    def __init__(self, shape, density):
+        neighborhood = np.ones((17, 17))
+        neighborhood[8][8] = 0
+        rule = [np.arange(163, 224), np.arange(74, 253)]
+        Automata.__init__(self, shape, density, neighborhood, rule)
+
+
 def main():
     # Create automata
     automata = Bugs((256, 256), density=0.5)
@@ -102,9 +110,10 @@ def main():
     # automata = Life34((256, 256), density=0.12)
     # automata = Amoeba((256, 256), density=0.18)
     # automata = Anneal((256, 256), density=0.5)
+    # automata = Globe((256, 256), density=0.4)
 
     # Benchmark automata
-    # automata.benchmark(interations=100)
+    # automata.benchmark(interations=5000)
 
     # Animate automata
     automata.animate(interval=100)
