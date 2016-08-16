@@ -27,8 +27,8 @@ class Automata:
         self.rule = rule
 
 
-    def update(self, num_updates=1):
-        for i in range(num_updates):
+    def update_board(self, intervals=1):
+        for i in range(intervals):
             convolution = fft_convolve2d(self.board, self.kernal)
             shape = convolution.shape
             new_board = np.zeros(shape)
@@ -39,11 +39,25 @@ class Automata:
             self.board = new_board
 
 
-    def benchmark(self, num_updates):
+    def benchmark(self, intervals):
         start = time.process_time()
-        self.update(num_updates)
-        print("Performed", num_updates, "updates of", self.board.shape, "took",
+        self.update_board(intervals)
+        print("Performed", intervals, "updates of", self.board.shape, "cells in",
               time.process_time() - start, "seconds")
+
+
+    def animate(self, interval=100):
+        
+        def update_animation(*args):
+            self.update_board()
+            self.image.set_array(self.board)
+            return self.image,
+
+        fig = pyplot.figure()
+        self.image = pyplot.imshow(self.board, interpolation="nearest",
+                                   cmap=pyplot.cm.gray)
+        ani = animation.FuncAnimation(fig, update_animation, interval=interval)
+        pyplot.show()
 
 
 class Conway(Automata):
@@ -92,21 +106,21 @@ class Animation:
 
 
     def animate(self, *args):
-        self.automata.update()
+        self.automata.update_board()
         self.image.set_array(self.automata.board)
         return self.image,
 
 
 def main():
     # Create automata
-    automata = Anneal(512, 512, density=0.5)
-    # automata = Conway(512, 512, density=0.5)
+    automata = Bugs(width=256, height=256, density=0.5)
+    # automata = Conway(width=256, height=256, density=0.5)
 
     # Benchmark automata
-    # ca.benchmark(100)
+    # automata.benchmark(intervals=100)
 
     # Animate automata
-    Animation(automata, 1)
+    automata.animate(interval=100)
 
 
 if __name__ == "__main__":
