@@ -15,14 +15,14 @@ def fft_convolve2d(board, kernal):
 
 
 class Automata:
-    def __init__(self, height, width, density, neighborhood, rule):
-        self.board = np.random.uniform(0, 1, (width, height))
+    def __init__(self, shape, density, neighborhood, rule):
+        self.board = np.random.uniform(0, 1, shape)
         self.board = self.board < density
 
-        k_height, k_width = neighborhood.shape
-        self.kernal = np.zeros((height, width))
-        self.kernal[(height - k_height - 1) // 2 : (height + k_height) // 2,
-                    (width - k_width - 1) // 2 : (width + k_width) // 2] = neighborhood
+        n_height, n_width = neighborhood.shape
+        self.kernal = np.zeros(shape)
+        self.kernal[(shape[0] - n_height - 1) // 2 : (shape[0] + n_height) // 2,
+                    (shape[1] - n_width - 1) // 2 : (shape[1] + n_width) // 2] = neighborhood
 
         self.rule = rule
 
@@ -47,7 +47,6 @@ class Automata:
 
 
     def animate(self, interval=100):
-        
         def update_animation(*args):
             self.update_board()
             self.image.set_array(self.board)
@@ -61,38 +60,45 @@ class Automata:
 
 
 class Conway(Automata):
-    def __init__(self, height, width, density):
+    def __init__(self, shape, density):
         neighborhood = np.array([[1, 1, 1], [1, 0, 1], [1, 1, 1]])
         rule = [[2, 3], [3]]
-        Automata.__init__(self, height, width, density, neighborhood, rule)
+        Automata.__init__(self, shape, density, neighborhood, rule)
 
 
 class Life34(Automata):
-    def __init__(self, height, width, density):
+    def __init__(self, shape, density):
         neighborhood = np.array([[1, 1, 1], [1, 0, 1], [1, 1, 1]])
         rule = [[3, 4], [3, 4]]
-        Automata.__init__(self, height, width, density, neighborhood, rule)
+        Automata.__init__(self, shape, density, neighborhood, rule)
 
 
 class Amoeba(Automata):
-    def __init__(self, height, width, density):
+    def __init__(self, shape, density):
         neighborhood = np.array([[1, 1, 1], [1, 0, 1], [1, 1, 1]])
         rule = [[1, 3, 5, 8], [3, 5, 7]]
-        Automata.__init__(self, height, width, density, neighborhood, rule)
+        Automata.__init__(self, shape, density, neighborhood, rule)
 
 
 class Anneal(Automata):
-    def __init__(self, height, width, density):
+    def __init__(self, shape, density):
         neighborhood = np.array([[1, 1, 1], [1, 0, 1], [1, 1, 1]])
         rule = [[3, 5, 6, 7, 8], [4, 6, 7, 8]]
-        Automata.__init__(self, height, width, density, neighborhood, rule)
+        Automata.__init__(self, shape, density, neighborhood, rule)
 
 
 class Bugs(Automata):
-    def __init__(self, height, width, density):
+    def __init__(self, shape, density):
         neighborhood = np.ones((11, 11))
         rule = [np.arange(34, 59), np.arange(34, 46)]
-        Automata.__init__(self, height, width, density, neighborhood, rule)
+        Automata.__init__(self, shape, density, neighborhood, rule)
+
+
+class Globe(Automata):
+    def __init__(self, shape, density):
+        neighborhood = np.ones((10, 1))
+        rule = [np.arange(34, 59), np.arange(34, 46)]
+        Automata.__init__(self, shape, density, neighborhood, rule)
 
 
 class Animation:
@@ -113,8 +119,11 @@ class Animation:
 
 def main():
     # Create automata
-    automata = Bugs(width=256, height=256, density=0.5)
-    # automata = Conway(width=256, height=256, density=0.5)
+    automata = Bugs((256, 256), density=0.5)
+    # automata = Conway((256, 256), density=0.5)
+    # automata = Life34((256, 256), density=0.12)
+    # automata = Amoeba((256, 256), density=0.18)
+    # automata = Anneal((256, 256), density=0.5)
 
     # Benchmark automata
     # automata.benchmark(intervals=100)
