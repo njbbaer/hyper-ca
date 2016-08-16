@@ -67,6 +67,13 @@ class Amoeba(Automata):
         Automata.__init__(self, height, width, density, neighborhood, rule)
 
 
+class Anneal(Automata):
+    def __init__(self, height, width, density):
+        neighborhood = np.array([[1, 1, 1], [1, 0, 1], [1, 1, 1]])
+        rule = [[3, 5, 6, 7, 8], [4, 6, 7, 8]]
+        Automata.__init__(self, height, width, density, neighborhood, rule)
+
+
 class Bugs(Automata):
     def __init__(self, height, width, density):
         neighborhood = np.ones((11, 11))
@@ -92,7 +99,7 @@ class Animation:
 
 def main():
     # Create automata
-    automata = Bugs(512, 512, density=0.5)
+    automata = Anneal(512, 512, density=0.5)
     # automata = Conway(512, 512, density=0.5)
 
     # Benchmark automata
