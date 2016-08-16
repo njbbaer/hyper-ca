@@ -73,29 +73,28 @@ class Life(Automata):
         self.board = new_board
 
 
-    @classmethod
-    def conway(cls, shape, density):
+class Conway(Life):
+    def __init__(self, shape, density):
         rule = ((2, 3), (3))
-        return cls(shape, density, rule)
+        super().__init__(shape, density, rule)
 
 
-    @classmethod
-    def life34(cls, shape, density):
+class Life34(Life):
+    def __init__(self, shape, density):
         rule = ((3, 4), (3, 4))
-        automata = cls(shape, density, rule)
-        return automata
+        super().__init__(shape, density, rule)
 
 
-    @classmethod
-    def amoeba(cls, shape, density):
+class Amoeba(Life):
+    def __init__(self, shape, density):
         rule = ((1, 3, 5, 8), (3, 5, 7))
-        return cls(shape, density, rule)
+        super().__init__(shape, density, rule)
 
 
-    @classmethod
-    def anneal(cls, shape, density):
+class Anneal(Life):
+    def __init__(self, shape, density):
         rule = ((3, 5, 6, 7, 8), (4, 6, 7, 8))
-        return cls(shape, density, rule)
+        super().__init__(shape, density, rule)
 
 
 class LargerThanLife(Automata):
@@ -117,28 +116,28 @@ class LargerThanLife(Automata):
         self.board = new_board
 
 
-    @classmethod
-    def bugs(cls, shape, density):
-        rule = ((34, 58), (34, 45))
+class Bugs(LargerThanLife):
+    def __init__(self, shape, density):
         radius = 5
-        return cls(shape, density, rule, radius, True)
+        rule = ((34, 58), (34, 45))
+        super().__init__(shape, density, rule, radius, True)
 
 
-    @classmethod
-    def globe(cls, shape, density):
+class Globe(LargerThanLife):
+    def __init__(self, shape, density):
         radius = 8
         rule = ((163, 223), (74, 252))
-        return cls(shape, density, rule, radius, False)
+        super().__init__(shape, density, rule, radius, False)
 
 
 def main():
     # Create automata
-    # automata = Life.conway((256, 256), 0.5)
-    # automata = Life.life34((256, 256), 0.12)
-    # automata = Life.amoeba((256, 256), 0.18)
-    # automata = Life.anneal((256, 256), 0.5)
-    automata = LargerThanLife.bugs((256, 256), 0.5)
-    # automata = LargerThanLife.globe((256, 256), 0.4)
+    # automata = Conway((256, 256), 0.5)
+    # automata = Life34((256, 256), 0.12)
+    # automata = Amoeba((256, 256), 0.18)
+    # automata = Anneal((256, 256), 0.5)
+    automata = Bugs((256, 256), 0.5)
+    # automata = Globe((256, 256), 0.4)
 
     # Benchmark automata
     # automata.benchmark(interations=5000)
