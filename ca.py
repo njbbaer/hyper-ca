@@ -47,6 +47,7 @@ class Automata:
 
 
     def animate(self, interval=100):
+        
         def update_animation(*args):
             self.update_board()
             self.image.set_array(self.board)
@@ -92,29 +93,6 @@ class Bugs(Automata):
         neighborhood = np.ones((11, 11))
         rule = [np.arange(34, 59), np.arange(34, 46)]
         Automata.__init__(self, shape, density, neighborhood, rule)
-
-
-class Globe(Automata):
-    def __init__(self, shape, density):
-        neighborhood = np.ones((10, 1))
-        rule = [np.arange(34, 59), np.arange(34, 46)]
-        Automata.__init__(self, shape, density, neighborhood, rule)
-
-
-class Animation:
-    def __init__(self, automata, interval=100):
-        self.automata = automata
-        fig = pyplot.figure()
-        self.image = pyplot.imshow(self.automata.board, interpolation="nearest",
-                                   cmap=pyplot.cm.gray)
-        ani = animation.FuncAnimation(fig, self.animate, interval=interval)
-        pyplot.show()
-
-
-    def animate(self, *args):
-        self.automata.update_board()
-        self.image.set_array(self.automata.board)
-        return self.image,
 
 
 def main():
