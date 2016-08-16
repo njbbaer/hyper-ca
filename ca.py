@@ -32,9 +32,9 @@ class Automata:
             shape = convolution.shape
             new_board = np.zeros(shape)
             new_board[np.where(np.in1d(convolution, self.rule[0]).reshape(shape)
-                               & (self.board == 0))] = 1
-            new_board[np.where(np.in1d(convolution, self.rule[1]).reshape(shape)
                                & (self.board == 1))] = 1
+            new_board[np.where(np.in1d(convolution, self.rule[1]).reshape(shape)
+                               & (self.board == 0))] = 1
             self.board = new_board
 
 
@@ -48,14 +48,28 @@ class Automata:
 class Conway(Automata):
     def __init__(self, height, width):
         neighborhood = np.array([[1, 1, 1], [1, 0, 1], [1, 1, 1]])
-        rule = [[3], [2, 3]]
+        rule = [[2, 3], [3]]
+        Automata.__init__(self, height, width, neighborhood, rule)
+
+
+class Life34(Automata):
+    def __init__(self, height, width):
+        neighborhood = np.array([[1, 1, 1], [1, 0, 1], [1, 1, 1]])
+        rule = [[3, 4], [3, 4]]
+        Automata.__init__(self, height, width, neighborhood, rule)
+
+
+class Amoeba(Automata):
+    def __init__(self, height, width):
+        neighborhood = np.array([[1, 1, 1], [1, 0, 1], [1, 1, 1]])
+        rule = [[1, 3, 5, 8], [3, 5, 7]]
         Automata.__init__(self, height, width, neighborhood, rule)
 
 
 class Bugs(Automata):
     def __init__(self, height, width):
         neighborhood = np.ones((11, 11))
-        rule = [np.arange(34, 46), np.arange(34, 59)]
+        rule = [np.arange(34, 59), np.arange(34, 46)]
         Automata.__init__(self, height, width, neighborhood, rule)
 
 
