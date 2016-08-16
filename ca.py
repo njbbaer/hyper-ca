@@ -39,10 +39,10 @@ class Automata:
             self.board = new_board
 
 
-    def benchmark(self, intervals):
+    def benchmark(self, interations):
         start = time.process_time()
-        self.update_board(intervals)
-        print("Performed", intervals, "updates of", self.board.shape, "cells in",
+        self.update_board(interations)
+        print("Performed", interations, "iterations of", self.board.shape, "cells in",
               time.process_time() - start, "seconds")
 
 
@@ -126,7 +126,7 @@ def main():
     # automata = Anneal((256, 256), density=0.5)
 
     # Benchmark automata
-    # automata.benchmark(intervals=100)
+    # automata.benchmark(interations=100)
 
     # Animate automata
     automata.animate(interval=100)
