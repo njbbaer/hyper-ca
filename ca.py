@@ -4,16 +4,6 @@ from numpy.fft import fft2, ifft2
 from matplotlib import pyplot, animation
 
 
-def fft_convolve2d(board, kernal):
-    board_ft = fft2(board)
-    kernal_ft = fft2(kernal)
-    height, width = board_ft.shape
-    convolution = np.real(ifft2(board_ft * kernal_ft))
-    convolution = np.roll(convolution, - int(height / 2) + 1, axis=0)
-    convolution = np.roll(convolution, - int(width / 2) + 1, axis=1)
-    return convolution.round()
-
-
 class Automata:
     def __init__(self, shape, density, neighborhood, rule):
         self.board = np.random.uniform(0, 1, shape)
@@ -29,7 +19,7 @@ class Automata:
 
     def update(self, intervals=1):
         for i in range(intervals):
-            convolution = fft_convolve2d(self.board, self.kernal)
+            convolution = Automata.fft_convolve2d(self.board, self.kernal)
             shape = convolution.shape
             new_board = np.zeros(shape)
             new_board[np.where(np.in1d(convolution, self.rule[0]).reshape(shape)
@@ -60,52 +50,63 @@ class Automata:
         pyplot.show()
 
 
+    @staticmethod
+    def fft_convolve2d(board, kernal):
+        board_ft = fft2(board)
+        kernal_ft = fft2(kernal)
+        height, width = board_ft.shape
+        convolution = np.real(ifft2(board_ft * kernal_ft))
+        convolution = np.roll(convolution, - int(height / 2) + 1, axis=0)
+        convolution = np.roll(convolution, - int(width / 2) + 1, axis=1)
+        return convolution.round()
+
+
     @classmethod
-    def conway(self, shape, density):
+    def conway(cls, shape, density):
         neighborhood = np.array([[1, 1, 1], [1, 0, 1], [1, 1, 1]])
         rule = [[2, 3], [3]]
-        automata = self(shape, density, neighborhood, rule)
+        automata = cls(shape, density, neighborhood, rule)
         return automata
 
 
     @classmethod
-    def life34(self, shape, density):
+    def life34(cls, shape, density):
         neighborhood = np.array([[1, 1, 1], [1, 0, 1], [1, 1, 1]])
         rule = [[3, 4], [3, 4]]
-        automata = self(shape, density, neighborhood, rule)
+        automata = cls(shape, density, neighborhood, rule)
         return automata
 
 
     @classmethod
-    def amoeba(self, shape, density):
+    def amoeba(cls, shape, density):
         neighborhood = np.array([[1, 1, 1], [1, 0, 1], [1, 1, 1]])
         rule = [[1, 3, 5, 8], [3, 5, 7]]
-        automata = self(shape, density, neighborhood, rule)
+        automata = cls(shape, density, neighborhood, rule)
         return automata
 
 
     @classmethod
-    def anneal(self, shape, density):
+    def anneal(cls, shape, density):
         neighborhood = np.array([[1, 1, 1], [1, 0, 1], [1, 1, 1]])
         rule = [[3, 5, 6, 7, 8], [4, 6, 7, 8]]
-        automata = self(shape, density, neighborhood, rule)
+        automata = cls(shape, density, neighborhood, rule)
         return automata
 
 
     @classmethod
-    def bugs(self, shape, density):
+    def bugs(cls, shape, density):
         neighborhood = np.ones((11, 11))
         rule = [np.arange(34, 59), np.arange(34, 46)]
-        automata = self(shape, density, neighborhood, rule)
+        automata = cls(shape, density, neighborhood, rule)
         return automata
 
 
     @classmethod
-    def globe(self, shape, density):
+    def globe(cls, shape, density):
         neighborhood = np.ones((17, 17))
         neighborhood[8][8] = 0
         rule = [np.arange(163, 224), np.arange(74, 253)]
-        automata = self(shape, density, neighborhood, rule)
+        automata = cls(shape, density, neighborhood, rule)
         return automata
 
 
