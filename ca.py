@@ -60,57 +60,63 @@ class Automata:
         pyplot.show()
 
 
-class Conway(Automata):
-    def __init__(self, shape, density):
+    @classmethod
+    def conway(self, shape, density):
         neighborhood = np.array([[1, 1, 1], [1, 0, 1], [1, 1, 1]])
         rule = [[2, 3], [3]]
-        Automata.__init__(self, shape, density, neighborhood, rule)
+        automata = self(shape, density, neighborhood, rule)
+        return automata
 
 
-class Life34(Automata):
-    def __init__(self, shape, density):
+    @classmethod
+    def life34(self, shape, density):
         neighborhood = np.array([[1, 1, 1], [1, 0, 1], [1, 1, 1]])
         rule = [[3, 4], [3, 4]]
-        Automata.__init__(self, shape, density, neighborhood, rule)
+        automata = self(shape, density, neighborhood, rule)
+        return automata
 
 
-class Amoeba(Automata):
-    def __init__(self, shape, density):
+    @classmethod
+    def amoeba(self, shape, density):
         neighborhood = np.array([[1, 1, 1], [1, 0, 1], [1, 1, 1]])
         rule = [[1, 3, 5, 8], [3, 5, 7]]
-        Automata.__init__(self, shape, density, neighborhood, rule)
+        automata = self(shape, density, neighborhood, rule)
+        return automata
 
 
-class Anneal(Automata):
-    def __init__(self, shape, density):
+    @classmethod
+    def anneal(self, shape, density):
         neighborhood = np.array([[1, 1, 1], [1, 0, 1], [1, 1, 1]])
         rule = [[3, 5, 6, 7, 8], [4, 6, 7, 8]]
-        Automata.__init__(self, shape, density, neighborhood, rule)
+        automata = self(shape, density, neighborhood, rule)
+        return automata
 
 
-class Bugs(Automata):
-    def __init__(self, shape, density):
+    @classmethod
+    def bugs(self, shape, density):
         neighborhood = np.ones((11, 11))
         rule = [np.arange(34, 59), np.arange(34, 46)]
-        Automata.__init__(self, shape, density, neighborhood, rule)
+        automata = self(shape, density, neighborhood, rule)
+        return automata
 
 
-class Globe(Automata):
-    def __init__(self, shape, density):
+    @classmethod
+    def globe(self, shape, density):
         neighborhood = np.ones((17, 17))
         neighborhood[8][8] = 0
         rule = [np.arange(163, 224), np.arange(74, 253)]
-        Automata.__init__(self, shape, density, neighborhood, rule)
+        automata = self(shape, density, neighborhood, rule)
+        return automata
 
 
 def main():
     # Create automata
-    automata = Bugs((256, 256), density=0.5)
-    # automata = Conway((256, 256), density=0.5)
-    # automata = Life34((256, 256), density=0.12)
-    # automata = Amoeba((256, 256), density=0.18)
-    # automata = Anneal((256, 256), density=0.5)
-    # automata = Globe((256, 256), density=0.4)
+    automata = Automata.bugs((256, 256), density=0.5)
+    # automata = Automata.conway((256, 256), density=0.5)
+    # automata = Automata.life34((256, 256), density=0.12)
+    # automata = Automata.amoeba((256, 256), density=0.18)
+    # automata = Automata.anneal((256, 256), density=0.5)
+    # automata = Automata.globe((256, 256), density=0.4)
 
     # Benchmark automata
     # automata.benchmark(interations=5000)
