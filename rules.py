@@ -148,6 +148,13 @@ class Bugs(LargerThanLife):
         super().__init__(shape, density, rule, radius, False)
 
 
+class BugsMovie(LargerThanLife):
+    def __init__(self, shape, density):
+        radius = 10
+        rule = ((123, 212), (123, 170))
+        super().__init__(shape, density, rule, radius, False)
+
+
 class Globe(LargerThanLife):
     def __init__(self, shape, density):
         radius = 8

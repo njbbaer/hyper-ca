@@ -122,6 +122,7 @@ def main():
     # automata = WalledCities(shape, 0.19)
 
     automata = Bugs(shape, 0.5)
+    # automata = BugsMovie(shape, 0.5)
     # automata = Globe(shape, 0.4)
 
     # automata.benchmark(interations=5000)
