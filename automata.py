@@ -97,37 +97,9 @@ class LargerThanLife(Automata):
 def main():
     shape = (256, 256)
 
-    # automata = Conway(shape, 0.2)
-    # automata = Life34(shape, 0.12)
-    # automata = Amoeba(shape, 0.18)
-    # automata = Anneal(shape, 0.5)
-    # automata = TwoByTwo(shape, 0.5)
-    # automata = Assimilation(shape, 0.16)
-    # automata = Coagulations(shape, 0.5)
-    # automata = Coral(shape, 0.25)
-    # automata = DayAndNight(shape, 0.5)
-    # automata = Diamoeba(shape, 0.48)
-    # automata = LifeWithoutDeath(shape, 0.02)
-    # automata = Gnarl(shape, 0.0001)
-    # automata = HighLife(shape, 0.5)
-    # automata = InverseLife(shape, 0.5)
-    # automata = LongLife(shape, 0.2)
-    # automata = Maze(shape, 0.02, False)
-    # automata = Move(shape, 0.1)
-    # automata = PseudoLife(shape, 0.1)
-    # automata = Replicator(shape, 0.00002)
-    # automata = Seeds(shape, 0.005)
-    # automata = Serviettes(shape, 0.002)
-    # automata = Stains(shape, 0.08)
-    # automata = WalledCities(shape, 0.19)
+    Bugs(shape).animate(interval=100)
 
-    automata = Bugs(shape, 0.5)
-    # automata = BugsMovie(shape, 0.5)
-    # automata = Globe(shape, 0.4)
-
-    # automata.benchmark(interations=5000)
-
-    automata.animate(interval=100)
+    # Bugs(shape).benchmark(interations=1000)
 
 
 if __name__ == "__main__":
