@@ -13,16 +13,17 @@ class Automata:
         self.board = self.board < density
 
         n_height, n_width = neighborhood.shape
-        self.kernal = np.zeros(shape)
-        self.kernal[(shape[0] - n_height - 1) // 2 : (shape[0] + n_height) // 2,
-                    (shape[1] - n_width - 1) // 2 : (shape[1] + n_width) // 2] = neighborhood
+        kernal = np.zeros(shape)
+        kernal[(shape[0] - n_height - 1) // 2 : (shape[0] + n_height) // 2,
+               (shape[1] - n_width - 1) // 2 : (shape[1] + n_width) // 2] = neighborhood
+        self.kernal_ft = fft2(kernal)
 
         self.rule = rule
 
 
     def update(self, intervals=1):
         for i in range(intervals):
-            convolution = Automata.fft_convolve2d(self.board, self.kernal)
+            convolution = self.fft_convolve2d()
             self.apply_rule(convolution)
 
 
@@ -47,12 +48,10 @@ class Automata:
         pyplot.show()
 
 
-    @staticmethod
-    def fft_convolve2d(board, kernal):
-        board_ft = fft2(board)
-        kernal_ft = fft2(kernal)
+    def fft_convolve2d(self):
+        board_ft = fft2(self.board)
         height, width = board_ft.shape
-        convolution = np.real(ifft2(board_ft * kernal_ft))
+        convolution = np.real(ifft2(board_ft * self.kernal_ft))
         convolution = np.roll(convolution, - int(height / 2) + 1, axis=0)
         convolution = np.roll(convolution, - int(width / 2) + 1, axis=1)
         return convolution.round()
@@ -97,9 +96,9 @@ class LargerThanLife(Automata):
 def main():
     shape = (256, 256)
 
-    Bugs(shape).animate(interval=100)
+    # Bugs(shape).benchmark(interations=10000)
 
-    # Bugs(shape).benchmark(interations=1000)
+    Bugs(shape).animate(interval=100)
 
 
 if __name__ == "__main__":
