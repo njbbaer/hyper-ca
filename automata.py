@@ -77,9 +77,9 @@ class Life(Automata):
 
 class LargerThanLife(Automata):
 
-    def __init__(self, shape, density, rule, radius, skip_center):
+    def __init__(self, shape, density, rule, radius, include_center):
         neighborhood = np.ones((radius*2+1, radius*2+1))
-        if skip_center:
+        if not include_center:
             neighborhood[radius][radius] = 0
         super().__init__(shape, density, neighborhood, rule)
 

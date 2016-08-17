@@ -26,25 +26,25 @@ class Anneal(Life):
 
 
 class Assimilation(Life):
-    def __init__(self, shape, density):
+    def __init__(self, shape, density=0.16):
         rule = ((4, 5, 6, 7), (3, 4, 5))
         super().__init__(shape, density, rule)
 
 
 class Coagulations(Life):
-    def __init__(self, shape, density):
+    def __init__(self, shape, density=0.5):
         rule = ((2, 3, 5, 6, 7, 8), (3, 7, 8))
         super().__init__(shape, density, rule)
 
 
 class Conway(Life):
-    def __init__(self, shape, density=0.16):
+    def __init__(self, shape, density=0.2):
         rule = ((2, 3), (3))
         super().__init__(shape, density, rule)
 
 
 class Coral(Life):
-    def __init__(self, shape, density=0.5):
+    def __init__(self, shape, density=0.25):
         rule = ((4, 5, 6, 7, 8), (3))
         super().__init__(shape, density, rule)
 
@@ -68,13 +68,13 @@ class Flakes(Life):
 
 
 class Gnarl(Life):
-    def __init__(self, shape, density=0.001):
+    def __init__(self, shape, density=0.0001):
         rule = ((1), (1))
         super().__init__(shape, density, rule)
 
 
 class HighLife(Life):
-    def __init__(self, shape, density=0.):
+    def __init__(self, shape, density=0.5):
         rule = ((2, 3), (3, 6))
         super().__init__(shape, density, rule)
 
@@ -86,7 +86,7 @@ class InverseLife(Life):
 
 
 class LongLife(Life):
-    def __init__(self, shape, density=0.5):
+    def __init__(self, shape, density=0.2):
         rule = ((5), (3, 4, 5))
         super().__init__(shape, density, rule)
 
@@ -145,18 +145,39 @@ class Bugs(LargerThanLife):
     def __init__(self, shape, density=0.5):
         radius = 5
         rule = ((34, 58), (34, 45))
-        super().__init__(shape, density, rule, radius, False)
+        super().__init__(shape, density, rule, radius, True)
 
 
 class BugsMovie(LargerThanLife):
     def __init__(self, shape, density=0.5):
         radius = 10
         rule = ((123, 212), (123, 170))
-        super().__init__(shape, density, rule, radius, False)
+        super().__init__(shape, density, rule, radius, True)
 
 
 class Globe(LargerThanLife):
     def __init__(self, shape, density=0.4):
         radius = 8
         rule = ((163, 223), (74, 252))
+        super().__init__(shape, density, rule, radius, False)
+
+
+class Majority(LargerThanLife):
+    def __init__(self, shape, density=0.5):
+        radius = 4
+        rule = ((41, 81), (41, 81))
+        super().__init__(shape, density, rule, radius, True)
+
+
+class Majorly(LargerThanLife):
+    def __init__(self, shape, density=0.5):
+        radius = 7
+        rule = ((113, 225), (113, 225))
+        super().__init__(shape, density, rule, radius, True)
+
+
+class Waffle(LargerThanLife):
+    def __init__(self, shape, density=0.4):
+        radius = 7
+        rule = ((100, 200), (75, 170))
         super().__init__(shape, density, rule, radius, True)
