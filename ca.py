@@ -97,6 +97,54 @@ class Anneal(Life):
         super().__init__(shape, density, rule)
 
 
+class TwoByTwo(Life):
+    def __init__(self, shape, density):
+        rule = ((1, 2, 5), (3, 6))
+        super().__init__(shape, density, rule)
+
+
+class Assimilation(Life):
+    def __init__(self, shape, density):
+        rule = ((4, 5, 6, 7), (3, 4, 5))
+        super().__init__(shape, density, rule)
+
+
+class Coagulations(Life):
+    def __init__(self, shape, density):
+        rule = ((2, 3, 5, 6, 7, 8), (3, 7, 8))
+        super().__init__(shape, density, rule)
+
+
+class Coral(Life):
+    def __init__(self, shape, density):
+        rule = ((4, 5, 6, 7, 8), (3))
+        super().__init__(shape, density, rule)
+
+
+class DayAndNight(Life):
+    def __init__(self, shape, density):
+        rule = ((3, 4, 6, 7, 8), (3, 6, 7, 8))
+        super().__init__(shape, density, rule)
+
+
+class Diamoeba(Life):
+    def __init__(self, shape, density):
+        rule = ((5, 6, 7, 8), (3, 5, 6, 7, 8))
+        super().__init__(shape, density, rule)
+
+
+class LifeWithoutDeath(Life):
+    def __init__(self, shape, density):
+        rule = ((0, 1, 2, 3, 4, 5, 6, 7, 8), (3))
+        super().__init__(shape, density, rule)
+
+
+class Gnarl(Life):
+    def __init__(self, shape, density):
+        rule = ((1), (1))
+        super().__init__(shape, density, rule)
+
+
 class LargerThanLife(Automata):
 
     def __init__(self, shape, density, rule, radius, use_center):
@@ -131,13 +179,24 @@ class Globe(LargerThanLife):
 
 
 def main():
+    shape = (256, 256)
+
     # Create automata
-    # automata = Conway((256, 256), 0.5)
-    # automata = Life34((256, 256), 0.12)
-    # automata = Amoeba((256, 256), 0.18)
-    # automata = Anneal((256, 256), 0.5)
-    automata = Bugs((256, 256), 0.5)
-    # automata = Globe((256, 256), 0.4)
+    # automata = Conway(shape, 0.5)
+    # automata = Life34(shape, 0.12)
+    # automata = Amoeba(shape, 0.18)
+    # automata = Anneal(shape, 0.5)
+    # automata = TwoByTwo(shape, 0.5)
+    # automata = Assimilation(shape, 0.16)
+    # automata = Coagulations(shape, 0.5)
+    # automata = Coral((256, 256), 0.25)
+    # automata = DayAndNight((256, 256), 0.5)
+    # automata = Diamoeba((256, 256), 0.48)
+    # automata = LifeWithoutDeath((256, 256), 0.02)
+    automata = Gnarl((256, 256), 0.0001)
+
+    # automata = Bugs(shape, 0.5)
+    # automata = Globe(shape, 0.4)
 
     # Benchmark automata
     # automata.benchmark(interations=5000)
