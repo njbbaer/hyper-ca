@@ -9,20 +9,24 @@ import models
 class Automata:
 
     def __init__(self, board, neighborhood, rule):
-        """
-        Todo: Validate rule
-        """
-
         self.board = board
+        self.set_kernal(neighborhood)
+        self.set_rule(rule)
 
+
+    def set_kernal(self, neighborhood):
         neighborhood = np.array(neighborhood)
-        n_height, n_width = neighborhood.shape
-        kernal = np.zeros(board.shape)
+        kernal = np.zeros(self.board.shape)
 
-        kernal[(board.shape[0] - n_height - 1) // 2 : (board.shape[0] + n_height) // 2,
-               (board.shape[1] - n_width - 1) // 2 : (board.shape[1] + n_width) // 2] = neighborhood
+        n_height, n_width = neighborhood.shape
+        b_height, b_width = self.board.shape
+
+        kernal[(b_height - n_height - 1) // 2 : (b_height + n_height) // 2,
+               (b_width - n_width - 1) // 2 : (b_width + n_width) // 2] = neighborhood
         self.kernal_ft = fft2(kernal)
 
+
+    def set_rule(self, rule):
         get_ints = lambda x: [i for i in x if isinstance(i, int)]
         self.rule_ints = (get_ints(rule[0]), get_ints(rule[1]))
         get_ranges = lambda x: [i for i in x if not isinstance(i, int)]
@@ -52,12 +56,9 @@ class Automata:
 
 
     def benchmark(self, iterations):
-        """
-        XPS-15: 5000 iterations of (256, 256) cells in 109.43707304 seconds
-        """
         start = time.process_time()
         self.update(iterations)
-        print(interations, "iterations of", self.board.shape, "cells in",
+        print(iterations, "iterations of", self.board.shape, "cells in",
               time.process_time() - start, "seconds")
 
 
