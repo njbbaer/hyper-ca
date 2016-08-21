@@ -1,4 +1,6 @@
-from automata import *
+import numpy as np
+
+from hyperca.automata import *
 
 
 def moore():

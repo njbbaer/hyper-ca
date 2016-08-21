@@ -3,8 +3,6 @@ import numpy as np
 from numpy.fft import fft2, ifft2
 from matplotlib import pyplot, animation
 
-import models
-
 
 class Automata:
 
@@ -90,6 +88,7 @@ def random_board(shape, density):
 
 
 def main():
+    import hyperca.models
 
     board = random_board((256, 256), density=0.5)
     automata = models.bugs(board)
