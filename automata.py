@@ -83,18 +83,14 @@ class Automata:
         return convolution.round()
 
 
-def random_board(shape, density):
-    return np.random.uniform(0, 1, shape) < density
-
-
 def main():
-    import hyperca.models
+    import models
 
-    board = random_board((256, 256), density=0.5)
-    automata = models.bugs(board)
+    board = np.random.uniform(size=(256, 256)) < 0.1
+    automata = Automata(board, *models.amoeba)
 
     automata.animate()
-    #automata.benchmark(iterations=1000)
+    #automata.benchmark(iterations=10000)
 
 
 if __name__ == "__main__":

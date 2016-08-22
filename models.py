@@ -1,36 +1,28 @@
+import collections
 import numpy as np
 
-from hyperca.automata import *
+from automata import *
 
 
-def moore():
-    return [[1, 1, 1],
-            [1, 0, 1],
-            [1, 1, 1]]
+amoeba = (
+    [[1, 1, 1], [1, 0, 1], [1, 1, 1]], 
+    [[1, 3, 5, 8], [3, 5, 7]]
+)
 
 
-def box(radius, center):
-    neighborhood = np.ones((radius*2+1, radius*2+1))
-    if not center:
-        neighborhood[radius][radius] = 0
-    return neighborhood
+anneal = (
+    [[1, 1, 1], [1, 0, 1], [1, 1, 1]], 
+    [[3, 5, 6, 7, 8], [4, 6, 7, 8]]
+)
 
 
-def amoeba(board):
-    rule = [[1, 3, 5, 8], [3, 5, 7]]
-    return Automata(board, moore(), rule)
+assimilation = (
+    [[1, 1, 1], [1, 0, 1], [1, 1, 1]], 
+    [[4, 5, 6, 7], [3, 4, 5]]
+)
 
 
-def anneal(board):
-    rule = [[3, 5, 6, 7, 8], [4, 6, 7, 8]]
-    return Automata(board, moore(), rule)
-
-
-def assimilation(board):
-    rule = [[4, 5, 6, 7], [3, 4, 5]]
-    return Automata(board, moore(), rule)
-
-
+"""
 def coagulations(board):
     rule = [[2, 3, 5, 6, 7, 8], [3, 7, 8]]
     return Automata(board, moore(), rule)
@@ -165,3 +157,4 @@ def waffle(board):
     rule = [[[100, 200]], [[75, 170]]]
     neighborhood = box(radius=7, center=True)
     return Automata(board, neighborhood, rule)
+"""
