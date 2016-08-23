@@ -1,160 +1,168 @@
-import collections
 import numpy as np
 
 from automata import *
 
 
-amoeba = (
-    [[1, 1, 1], [1, 0, 1], [1, 1, 1]], 
-    [[1, 3, 5, 8], [3, 5, 7]]
-)
+def moore_neighborhood():
+    return [[1, 1, 1],
+            [1, 0, 1],
+            [1, 1, 1]]
 
 
-anneal = (
-    [[1, 1, 1], [1, 0, 1], [1, 1, 1]], 
-    [[3, 5, 6, 7, 8], [4, 6, 7, 8]]
-)
+def box_neighborhood(radius, center):
+    neighborhood = np.ones((radius*2+1, radius*2+1))
+    if not center:
+        neighborhood[radius][radius] = 0
+    return neighborhood
 
 
-assimilation = (
-    [[1, 1, 1], [1, 0, 1], [1, 1, 1]], 
-    [[4, 5, 6, 7], [3, 4, 5]]
-)
+def amoeba(shape):
+    rule = [[1, 3, 5, 8], [3, 5, 7]]
+    return Automata(shape, moore_neighborhood(), rule)
 
 
-"""
-def coagulations(board):
+def anneal(shape):
+    rule = [[3, 5, 6, 7, 8], [4, 6, 7, 8]]
+    return Automata(shape, moore_neighborhood(), rule)
+
+
+def assimilation(shape):
+    rule = [[4, 5, 6, 7], [3, 4, 5]]
+    return Automata(shape, moore_neighborhood(), rule)
+
+
+def coagulations(shape):
     rule = [[2, 3, 5, 6, 7, 8], [3, 7, 8]]
-    return Automata(board, moore(), rule)
+    return Automata(shape, moore_neighborhood(), rule)
 
 
-def conway(board):
+def conway(shape):
     rule = [[2, 3], [3]]
-    return Automata(board, moore(), rule)
+    return Automata(shape, moore_neighborhood(), rule)
 
 
-def coral(board):
+def coral(shape):
     rule = [[4, 5, 6, 7, 8], [3]]
-    return Automata(board, moore(), rule)
+    return Automata(shape, moore_neighborhood(), rule)
 
 
-def day_and_night(board):
+def day_and_night(shape):
     rule = [[3, 4, 6, 7, 8], [3, 6, 7, 8]]
-    return Automata(board, moore(), rule)
+    return Automata(shape, moore_neighborhood(), rule)
 
 
-def diamoeba(board):
+def diamoeba(shape):
     rule = [[5, 6, 7, 8], [3, 5, 6, 7, 8]]
-    return Automata(board, moore(), rule)
+    return Automata(shape, moore_neighborhood(), rule)
 
 
-def flakes(board):
+def flakes(shape):
     rule = [[0, 1, 2, 3, 4, 5, 6, 7, 8], [3]]
-    return Automata(board, moore(), rule)
+    return Automata(shape, moore_neighborhood(), rule)
 
 
-def gnarl(board):
+def gnarl(shape):
     rule = [[1], [1]]
-    return Automata(board, moore(), rule)
+    return Automata(shape, moore_neighborhood(), rule)
 
 
-def high_life(board):
+def high_life(shape):
     rule = [[2, 3], [3, 6]]
-    return Automata(board, moore(), rule)
+    return Automata(shape, moore_neighborhood(), rule)
 
 
-def inverse_life(board):
+def inverse_life(shape):
     rule = [[3, 4, 6, 7, 8], [0, 1, 2, 3, 4, 7, 8]]
-    return Automata(board, moore(), rule)
+    return Automata(shape, moore_neighborhood(), rule)
 
 
-def life_34(board):
+def life_34(shape):
     rule = [[1, 2, 5], [3, 6]]
-    return Automata(board, moore(), rule)
+    return Automata(shape, moore_neighborhood(), rule)
 
 
-def long_life(board):
+def long_life(shape):
     rule = [[5], [3, 4, 5]]
-    return Automata(board, moore(), rule)
+    return Automata(shape, moore_neighborhood(), rule)
 
 
-def maze(board):
+def maze(shape):
     rule = [[1, 2, 3, 4, 5], [3]]
-    return Automata(board, moore(), rule)
+    return Automata(shape, moore_neighborhood(), rule)
 
 
-def move(board):
+def move(shape):
     rule = [[2, 4, 5], [3, 6, 8]]
-    return Automata(board, moore(), rule)
+    return Automata(shape, moore_neighborhood(), rule)
 
 
-def pseudo_life(board):
+def pseudo_life(shape):
     rule = [[2, 3, 8], [3, 5, 7]]
-    return Automata(board, moore(), rule)
+    return Automata(shape, moore_neighborhood(), rule)
 
 
-def replicator(board):
+def replicator(shape):
     rule = [[1, 3, 5, 7], [1, 3, 5, 7]]
-    return Automata(board, moore(), rule)
+    return Automata(shape, moore_neighborhood(), rule)
 
 
-def seeds(board):
+def seeds(shape):
     rule = [[], [2,]]
-    return Automata(board, moore(), rule)
+    return Automata(shape, moore_neighborhood(), rule)
 
 
-def serviettes(board):
+def serviettes(shape):
     rule = [[], [2, 3, 4]]
-    return Automata(board, moore(), rule)
+    return Automata(shape, moore_neighborhood(), rule)
 
 
-def stains(board):
+def stains(shape):
     rule = [[2, 3, 5, 6, 7, 8], [3, 6, 7, 8]]
-    return Automata(board, moore(), rule)
+    return Automata(shape, moore_neighborhood(), rule)
 
 
-def two_by_two(board):
+def two_by_two(shape):
     rule = [[1, 2, 5], [3, 6]]
-    return Automata(board, moore(), rule)
+    return Automata(shape, moore_neighborhood(), rule)
 
 
-def walled_cities(board):
+def walled_cities(shape):
     rule = [[2, 3, 4, 5], [4, 5, 6, 7, 8]]
-    return Automata(board, moore(), rule)
+    return Automata(shape, moore_neighborhood(), rule)
 
 
-def bugs(board):
+def bugs(shape):
     rule = [[[34, 58]], [[34, 45]]]
-    neighborhood = box(radius=5, center=True)
-    return Automata(board, neighborhood, rule)
+    neighborhood = box_neighborhood(radius=5, center=True)
+    return Automata(shape, neighborhood, rule)
 
 
-def bugs_movie(board):
+def bugs_movie(shape):
     rule = [[[123, 212]], [[123, 170]]]
-    neighborhood = box(radius=10, center=True)
-    return Automata(board, neighborhood, rule)
+    neighborhood = box_neighborhood(radius=10, center=True)
+    return Automata(shape, neighborhood, rule)
 
 
-def globe(board):
+def globe(shape):
     rule = [[[163, 223]], [[74, 252]]]
-    neighborhood = box(radius=8, center=False)
-    return Automata(board, neighborhood, rule)
+    neighborhood = box_neighborhood(radius=8, center=False)
+    return Automata(shape, neighborhood, rule)
 
 
-def majority(board):
+def majority(shape):
     rule = [[[41, 81]], [[41, 81]]]
-    neighborhood = box(radius=4, center=True)
-    return Automata(board, neighborhood, rule)
+    neighborhood = box_neighborhood(radius=4, center=True)
+    return Automata(shape, neighborhood, rule)
 
 
-def majorly(board):
+def majorly(shape):
     rule = [[[113, 225]], [[113, 225]]]
-    neighborhood = box(radius=7, center=True)
-    return Automata(board, neighborhood, rule)
+    neighborhood = box_neighborhood(radius=7, center=True)
+    return Automata(shape, neighborhood, rule)
 
 
-def waffle(board):
+def waffle(shape):
     rule = [[[100, 200]], [[75, 170]]]
-    neighborhood = box(radius=7, center=True)
-    return Automata(board, neighborhood, rule)
-"""
+    neighborhood = box_neighborhood(radius=7, center=True)
+    return Automata(shape, neighborhood, rule)
+    

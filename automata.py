@@ -6,8 +6,8 @@ from matplotlib import pyplot, animation
 
 class Automata:
 
-    def __init__(self, board, neighborhood, rule):
-        self.board = board
+    def __init__(self, shape, neighborhood, rule):
+        self.board = np.zeros(shape)
         self.set_kernal(neighborhood)
         self.set_rule(rule)
 
@@ -33,7 +33,7 @@ class Automata:
 
     def update(self, intervals=1):
         for i in range(intervals):
-            convolution = self.fft_convolve2d()
+            convolution = self._fft_convolve2d()
             shape = convolution.shape
             new_board = np.zeros(shape)
 
@@ -51,6 +51,14 @@ class Automata:
                                    & (convolution <= rule_range[1]))] = 1
             self.board = new_board
 
+
+    def _fft_convolve2d(self):
+        board_ft = fft2(self.board)
+        height, width = board_ft.shape
+        convolution = np.real(ifft2(board_ft * self.kernal_ft))
+        convolution = np.roll(convolution, - int(height / 2) + 1, axis=0)
+        convolution = np.roll(convolution, - int(width / 2) + 1, axis=1)
+        return convolution.round()
 
 
     def benchmark(self, iterations):
@@ -74,22 +82,17 @@ class Automata:
         pyplot.show()
 
 
-    def fft_convolve2d(self):
-        board_ft = fft2(self.board)
-        height, width = board_ft.shape
-        convolution = np.real(ifft2(board_ft * self.kernal_ft))
-        convolution = np.roll(convolution, - int(height / 2) + 1, axis=0)
-        convolution = np.roll(convolution, - int(width / 2) + 1, axis=1)
-        return convolution.round()
+    def populate(self, density):
+        self.board = np.random.uniform(size=self.board.shape) < density
 
 
 def main():
     import models
 
-    board = np.random.uniform(size=(256, 256)) < 0.1
-    automata = Automata(board, *models.amoeba)
-
+    automata = models.bugs((256, 256))
+    automata.populate(0.5)
     automata.animate()
+
     #automata.benchmark(iterations=10000)
 
 
