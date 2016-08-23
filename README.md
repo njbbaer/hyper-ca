@@ -1,47 +1,70 @@
 # Hyper CA
-Hyper CA is a python package for simulating *2d binary totalistic cellular automata*, such as Conway's Game of Life. It uses 2D convolution to perform faster than standard implementations. The performance of this method is not affected by large neighborhood sizes or chaotic patterns.
+Hyper CA is a python package for simulating *2d binary totalistic cellular automata*, such as Conway's Game of Life. It uses fast 2D convolution to outperfrom many other implementations. This method is especially efficient for models with large neighborhood sizes, such as Bugs.
 
-### Animation of Conway's Game of Life
-```
-import numpy
-from hyperca import Automata, models
+### Animation of the Bugs model
+```python
+from hyperca import models
 
-board = numpy.random.uniform(size=(256, 256)) < 0.5
-Automata(board, *models.conway).animate()
+automata = models.bugs((256, 256))
+automata.populate(0.5)
+automata.animate()
 ```
 
 # Documentation
-An `Automata` object has three parts: a board, neighborhood, and rule.
+An `Automata` object is the basic unit of a cellular automata simulation. It is defined by a board size, neighborhood, and rule.
 
-A **board** is a 2D list of binary states that represent the size and starting state of the simulation. A board of size 256x256 with 50% random starting density may be created with numpy.
+## Built-in Models
+Hyper CA contains over 30 built-in models each with a predefined neighborhood and rule. The `conway` model returns an `Automata` object with the parameters for Conway's Game of Life. The `shape` parameter sets the size of the board.
+```python
+automata = models.conway(shape=(256, 256))
 ```
-board = numpy.random.uniform(size=(256, 256)) < 0.5
+
+Each of these models demonstrates an intereseting aspect of cellular automata and are detailed in the [Cellular Automata rules lexicon](http://psoup.math.wisc.edu/mcell/ca_rules.html).
+
+## Custom Models
+Defining a custom model requires a board shape, neighborhood, and rule.
+```python
+automata = Automata((256, 256), neighborhood, rule)
 ```
 
 A **neighborhood** is a 2D list of integers that determines which of a cell's neighbors are counted towards its sum. Conway's Game of Life uses the Moore neighborhood.
-```
+```python
 neighborhood = [[1, 1, 1],
                 [1, 0, 1],
                 [1, 1, 1]]
 ```
 
 A **rule** is a list of two lists that specifies the numbers of alive neighbors for a cell to survive or be born in the next generation. A cell in Conway's Game of Life survives if it has 2 or 3 neighbors and is born if it has exactly 3 neighbors.
-```
+```python
 rule = [[2, 3], [3]]
 ```
+
 Rules may also be defined as ranges. A range is a list containing a minimum and maximum value. Ranges may be used alongside individual integers. Cells in the Bugs model survive with between 34 and 58 neighbors and are born with between 34 and 48 neighbors.
-```
+```python
 rule = [[[34, 58]], [[34, 45]]]
 ```
 
-Finally an `Automata` object may be created with these three parameters.
-```
-automata = Automata(board, neighborhood, rule)
+## Simulation
+The board of a new `Automata` object is initialized with inactive states. The `populate` method will randomly fill the board with active states at a given density.
+```python
+automata.populate(density=0.5)
 ```
 
-## Built-in Models
-Hyper CA contains over 30 built-in models with predefined neighborhoods and rules. The `conway` model returns the neighborhood and rule used for Conway's Game of Life.
+The `update` method will advance the board to its next state. Set the optional `iterations` parameter to perform multiple consecutive updates.
+```python
+automata.update(iterations=1)
 ```
-automata = Automata(board, *models.conway)
+
+The `animate` method will graphically display and update the the board using matplotlib. Set the optional `interval` parameter to define the number of milliseconds between each frame. Note that choosing an interval smaller than your computer can compute the update may freeze the animation.
+```python
+automata.animate(interval=100)
 ```
-Each of these models demonstrate an intereseting aspect of cellular automata and are detailed in the [Cellular Automata rules lexicon](http://psoup.math.wisc.edu/mcell/ca_rules.html). Note that you may need to adjust the board's starting density to properly observe the model.
+
+The `benchmark` method will measure the time taken to perform a given number of iterations. Results for an Intel Core i7-4870HQ.
+```python
+automata.benchmark(iterations=10000)
+# 10000 iterations of (256, 256) cells in 61.86 seconds
+```
+
+# Contribute
+If you enjoy this project, show your thanks by starrting the repository. Please support the project by submitting any bugs, feature requests, or general comments as GitHub issues. Feel free to contribute directly by forking and making changes. I will review all pull requests.
