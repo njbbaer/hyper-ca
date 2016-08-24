@@ -1,5 +1,5 @@
 # Hyper CA
-Hyper CA is a python package for simulating *2d binary totalistic cellular automata*, such as Conway's Game of Life. It uses fast 2D convolution to outperform many other implementations. This method is especially efficient for models with large neighborhood sizes, such as the amazingly lifelike Bugs.
+Hyper CA is a python package for simulating *2d binary totalistic cellular automata*, such as Conway's Game of Life. It uses fast 2D convolution to outperform many other implementations. This method is especially efficient for models with large neighborhood sizes, such as the amazingly lifelike [Bugs](http://www.emis.de/journals/DMTCS/pdfpapers/dmAA0113.pdf).
 
 ### Animation of the Bugs model
 ```python
@@ -75,4 +75,4 @@ automata.benchmark(iterations=10000)
 ```
 
 # Contribute
-If you enjoy this project show your thanks by starring the repository. Please support it by submitting any bugs, feature requests, or general comments as GitHub issues. Feel free to contribute directly by forking and making changes. I will gladly review pull requests.
+Contribute to this project's expose by starring the repository. Please submit any bugs, feature requests, or comments as GitHub issues. Feel free to contribute directly by forking and making changes. I will gladly review pull requests.
