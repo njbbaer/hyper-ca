@@ -1,6 +1,6 @@
 import numpy as np
 
-from automata import *
+from .automata import Automata
 
 
 def moore_neighborhood():

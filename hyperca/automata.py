@@ -84,17 +84,4 @@ class Automata:
 
     def populate(self, density):
         self.board = np.random.uniform(size=self.board.shape) < density
-
-
-def main():
-    import models
-
-    automata = models.bugs((256, 256))
-    automata.populate(0.5)
-    automata.animate()
-
-    #automata.benchmark(iterations=10000)
-
-
-if __name__ == "__main__":
-    main()
+        
