@@ -2,7 +2,7 @@ import sys
 import numpy
 import argparse
 
-import hyperca
+from automata import Automata
 
 
 def parse_args():
@@ -40,6 +40,6 @@ elif args.mode == 'ltl':
 
 shape = (args.height, args.width)
 
-automata = hyperca.automata.Automata(shape, neighborhood, rule)
+automata = Automata(shape, neighborhood, rule)
 automata.populate(args.density)
 automata.animate()
