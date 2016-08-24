@@ -165,4 +165,14 @@ def waffle(shape):
     rule = [[[100, 200]], [[75, 170]]]
     neighborhood = box_neighborhood(radius=7, center=True)
     return Automata(shape, neighborhood, rule)
+
+
+def ltl59999(shape):
+    '''
+    LtL rule (5, 9, 9, 9)
+    Ideal density: 0.1
+    '''
+    rule = [[[9, 9]], [[9, 9]]]
+    neighborhood = box_neighborhood(radius=5, center=True)
+    return Automata(shape, neighborhood, rule)
     
