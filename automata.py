@@ -68,7 +68,7 @@ class Automata:
               time.process_time() - start, "seconds")
 
 
-    def animate(self, interval=100):
+    def animate(self, fps=10):
         
         def refresh(*args):
             self.update()
@@ -78,7 +78,7 @@ class Automata:
         figure = pyplot.figure()
         image = pyplot.imshow(self.board, interpolation="nearest",
                               cmap=pyplot.cm.gray)
-        ani = animation.FuncAnimation(figure, refresh, interval=interval)
+        ani = animation.FuncAnimation(figure, refresh, interval=1000/fps)
         pyplot.show()
 
 
