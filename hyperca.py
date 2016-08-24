@@ -6,6 +6,7 @@ from automata import Automata
 
 
 parser = argparse.ArgumentParser()
+
 parser.add_argument('height', help='height of board', type=int)
 parser.add_argument('width', help='width of board', type=int)
 parser.add_argument('density', help='inital density', type=float)
