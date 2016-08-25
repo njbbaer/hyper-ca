@@ -2,6 +2,7 @@ import time
 import numpy as np
 from numpy.fft import fft2, ifft2
 from matplotlib import pyplot, animation
+import png
 
 
 class Automata:
@@ -21,7 +22,7 @@ class Automata:
 
 
     def init_board_populate(self, shape, density):
-        self.board = np.random.uniform(size=self.board.shape) < density
+        self.board = np.random.uniform(size=shape) < density
         self.board = self.board.astype(int)
         self._update_kernal_ft()
 
@@ -87,4 +88,11 @@ class Automata:
                               cmap=pyplot.cm.gray)
         ani = animation.FuncAnimation(figure, refresh, interval=1000/fps)
         pyplot.show()
+
+
+    def save_png(self, filename):
+        file = open(filename, 'wb')
+        writer = png.Writer(self.board.shape[1], self.board.shape[0], greyscale=True)
+        writer.write(file, self.board*255)
+        file.close()
         
