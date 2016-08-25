@@ -1,8 +1,12 @@
+'''
+python3 hyperca.py 512 512 0.5 ltl 5 34 45 34 58
+'''
+
 import sys
 import numpy
 import argparse
 
-from automata import Automata
+from hyperca import Automata
 
 
 parser = argparse.ArgumentParser()
