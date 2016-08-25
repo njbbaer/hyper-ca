@@ -6,29 +6,36 @@ from matplotlib import pyplot, animation
 
 class Automata:
 
-    def __init__(self, shape, neighborhood, rule):
-        self.board = np.zeros(shape, dtype=int)
-        self.set_kernal(neighborhood)
-        self.set_rule(rule)
+    def __init__(self, neighborhood, rule):
+        self.neighborhood = neighborhood
+
+        get_ints = lambda x: [i for i in x if isinstance(i, int)]
+        self.rule_ints = (get_ints(rule[0]), get_ints(rule[1]))
+        get_ranges = lambda x: [i for i in x if not isinstance(i, int)]
+        self.rule_ranges = (get_ranges(rule[0]), get_ranges(rule[1]))
 
 
-    def set_kernal(self, neighborhood):
-        neighborhood = np.array(neighborhood)
+    def init_board(self, board):
+        self.board = np.array(board, dtype=int)
+        self._update_kernal_ft()
+
+
+    def init_board_populate(self, shape, density):
+        self.board = np.random.uniform(size=self.board.shape) < density
+        self.board = self.board.astype(int)
+        self._update_kernal_ft()
+
+
+    def _update_kernal_ft(self):
+        neighborhood = np.array(self.neighborhood)
         kernal = np.zeros(self.board.shape)
 
         n_height, n_width = neighborhood.shape
         b_height, b_width = self.board.shape
 
         kernal[(b_height - n_height - 1) // 2 : (b_height + n_height) // 2,
-               (b_width - n_width - 1) // 2 : (b_width + n_width) // 2] = neighborhood
+               (b_width - n_width - 1) // 2 : (b_width + n_width) // 2] = self.neighborhood
         self.kernal_ft = fft2(kernal)
-
-
-    def set_rule(self, rule):
-        get_ints = lambda x: [i for i in x if isinstance(i, int)]
-        self.rule_ints = (get_ints(rule[0]), get_ints(rule[1]))
-        get_ranges = lambda x: [i for i in x if not isinstance(i, int)]
-        self.rule_ranges = (get_ranges(rule[0]), get_ranges(rule[1]))
 
 
     def update(self, intervals=1):
@@ -80,9 +87,4 @@ class Automata:
                               cmap=pyplot.cm.gray)
         ani = animation.FuncAnimation(figure, refresh, interval=1000/fps)
         pyplot.show()
-
-
-    def populate(self, density):
-        self.board = np.random.uniform(size=self.board.shape) < density
-        self.board = self.board.astype(int)
         
