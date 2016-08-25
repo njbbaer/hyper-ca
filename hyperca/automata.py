@@ -7,7 +7,7 @@ from matplotlib import pyplot, animation
 class Automata:
 
     def __init__(self, shape, neighborhood, rule):
-        self.board = np.zeros(shape)
+        self.board = np.zeros(shape, dtype=int)
         self.set_kernal(neighborhood)
         self.set_rule(rule)
 
@@ -49,7 +49,7 @@ class Automata:
                 new_board[np.where((self.board == 0)
                                    & (convolution >= rule_range[0]) 
                                    & (convolution <= rule_range[1]))] = 1
-            self.board = new_board
+            self.board = new_board.astype(int)
 
 
     def _fft_convolve2d(self):
@@ -84,4 +84,5 @@ class Automata:
 
     def populate(self, density):
         self.board = np.random.uniform(size=self.board.shape) < density
+        self.board = self.board.astype(int)
         
