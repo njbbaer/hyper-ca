@@ -78,7 +78,7 @@ class Automata:
               "%.2f"%delta, "seconds at", "%.2f"%rate, "megacells per second")
 
 
-    def animate(self, fps=10):
+    def animate(self, fps=10, filename=None):
         
         def refresh(*args):
             self.update()
@@ -88,7 +88,12 @@ class Automata:
         figure = pyplot.figure()
         image = pyplot.imshow(self.board, interpolation="nearest",
                               cmap=pyplot.cm.gray)
-        ani = animation.FuncAnimation(figure, refresh, interval=1000/fps)
+        anim = animation.FuncAnimation(figure, refresh, interval=1000/fps)
+
+        if filename:
+            writer = animation.FFMpegWriter()
+            anim.save(filename, writer=writer)
+
         pyplot.show()
 
 
