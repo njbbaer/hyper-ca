@@ -72,8 +72,10 @@ class Automata:
     def benchmark(self, iterations):
         start = time.process_time()
         self.update(iterations)
+        delta = time.process_time() - start
+        rate = (iterations * self.board.size / delta) * 0.000001
         print(iterations, "iterations of", self.board.shape, "cells in",
-              time.process_time() - start, "seconds")
+              "%.2f"%delta, "seconds at", "%.2f"%rate, "megacells per second")
 
 
     def animate(self, fps=10):
