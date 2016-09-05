@@ -1,8 +1,9 @@
 import time
 import numpy as np
-from numpy.fft import fft2, ifft2
-from matplotlib import pyplot, animation
 import png
+import reikna.cluda
+import reikna.fft
+from matplotlib import pyplot, animation
 
 
 class Automata:
@@ -17,17 +18,17 @@ class Automata:
 
 
     def init_board(self, board):
-        self.board = np.array(board, dtype=int)
-        self._update_kernal_ft()
+        self.board = np.array(board, dtype=np.float32)
+        self._calculate_kernal_ft()
 
 
     def init_board_populate(self, shape, density):
         self.board = np.random.uniform(size=shape) < density
-        self.board = self.board.astype(int)
-        self._update_kernal_ft()
+        self.board = self.board.astype(np.float32)
+        self._calculate_kernal_ft()
 
 
-    def _update_kernal_ft(self):
+    def _calculate_kernal_ft(self):
         neighborhood = np.array(self.neighborhood)
         kernal = np.zeros(self.board.shape)
 
@@ -36,12 +37,12 @@ class Automata:
 
         kernal[(b_height - n_height - 1) // 2 : (b_height + n_height) // 2,
                (b_width - n_width - 1) // 2 : (b_width + n_width) // 2] = self.neighborhood
-        self.kernal_ft = fft2(kernal)
+        self.kernal_ft = np.real(np.fft.fft2(kernal))
 
 
-    def update(self, intervals=1):
-        for i in range(intervals):
-            convolution = self._fft_convolve2d()
+    def update(self, iterations=1):
+        for i in range(iterations):
+            convolution = self._convolve2d()
             shape = convolution.shape
             new_board = np.zeros(shape)
 
@@ -58,14 +59,14 @@ class Automata:
                                    & (convolution >= rule_range[0]) 
                                    & (convolution <= rule_range[1]))] = 1
             self.board = new_board.astype(int)
-
-
-    def _fft_convolve2d(self):
-        board_ft = fft2(self.board)
+            
+            
+    def _convolve2d(self):
+        board_ft = np.fft.fft2(self.board)
+        convolution = np.real(np.fft.ifft2(board_ft * self.kernal_ft))
         height, width = board_ft.shape
-        convolution = np.real(ifft2(board_ft * self.kernal_ft))
-        convolution = np.roll(convolution, - int(height / 2) + 1, axis=0)
-        convolution = np.roll(convolution, - int(width / 2) + 1, axis=1)
+        convolution = np.roll(convolution, - int(height / 2), axis=0)
+        convolution = np.roll(convolution, - int(width / 2), axis=1)
         return convolution.round()
 
 
@@ -103,3 +104,36 @@ class Automata:
         writer.write(file, self.board*255)
         file.close()
         
+
+class Automata_GPU(Automata):
+
+    def __init__(self, neighborhood, rule):
+        super().__init__(neighborhood, rule)
+
+
+    def _convolve2d(self):
+
+        def _fft2d_gpu(array, thread, is_inverse=False):
+            array_complex = array.astype(np.complex64)
+
+            board_device = thread.to_device(array_complex)
+            result_device = thread.array(array.shape, dtype=np.complex64)
+
+            fft = reikna.fft.FFT(array_complex, axes=(0, 1))
+
+            fft_complied = fft.compile(thread)
+            fft_complied(result_device, board_device, inverse=is_inverse)
+
+            return np.real(result_device.get())
+
+
+        api = reikna.cluda.any_api()
+        thread = api.Thread.create()
+
+        board_ft = _fft2d_gpu(self.board, thread)
+
+        convolution = _fft2d_gpu(board_ft * self.kernal_ft, thread, True)
+        height, width = board_ft.shape
+        convolution = np.roll(convolution, - int(height / 2), axis=0)
+        convolution = np.roll(convolution, - int(width / 2), axis=1)
+        return convolution.round()

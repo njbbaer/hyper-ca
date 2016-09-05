@@ -1,1 +1,1 @@
-from hyperca.automata import Automata
+from hyperca.automata import Automata, Automata_GPU
