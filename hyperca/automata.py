@@ -37,7 +37,7 @@ class Automata:
 
         kernal[(b_height - n_height - 1) // 2 : (b_height + n_height) // 2,
                (b_width - n_width - 1) // 2 : (b_width + n_width) // 2] = self.neighborhood
-        self.kernal_ft = np.real(np.fft.fft2(kernal))
+        self.kernal_ft = np.fft.fft2(kernal)
 
 
     def update(self, iterations=1):
@@ -63,10 +63,10 @@ class Automata:
             
     def _convolve2d(self):
         board_ft = np.fft.fft2(self.board)
-        convolution = np.real(np.fft.ifft2(board_ft * self.kernal_ft))
+        convolution = np.fft.ifft2(board_ft * self.kernal_ft)
         height, width = board_ft.shape
-        convolution = np.roll(convolution, - int(height / 2), axis=0)
-        convolution = np.roll(convolution, - int(width / 2), axis=1)
+        convolution = np.roll(convolution, - int(height / 2) + 1, axis=0)
+        convolution = np.roll(convolution, - int(width / 2) + 1, axis=1)
         return convolution.round()
 
 
@@ -124,7 +124,7 @@ class Automata_GPU(Automata):
             fft_complied = fft.compile(thread)
             fft_complied(result_device, board_device, inverse=is_inverse)
 
-            return np.real(result_device.get())
+            return result_device.get()
 
 
         api = reikna.cluda.any_api()
@@ -134,6 +134,6 @@ class Automata_GPU(Automata):
 
         convolution = _fft2d_gpu(board_ft * self.kernal_ft, thread, True)
         height, width = board_ft.shape
-        convolution = np.roll(convolution, - int(height / 2), axis=0)
-        convolution = np.roll(convolution, - int(width / 2), axis=1)
+        convolution = np.roll(convolution, - int(height / 2) + 1, axis=0)
+        convolution = np.roll(convolution, - int(width / 2) + 1, axis=1)
         return convolution.round()
